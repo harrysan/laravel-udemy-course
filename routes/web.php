@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class,'home'])
     ->name('home.index');
+    //->middleware('auth');
 Route::get('/contact', [HomeController::class,'contact'])
     ->name('home.contact');
 
@@ -36,4 +37,4 @@ Route::resource('posts', PostsController::class);
 // only, except
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

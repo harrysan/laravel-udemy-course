@@ -57,12 +57,15 @@ class PostTest extends TestCase
 
     public function testStoreValid()
     {
+        //$user = $this->user();
+
         $params = [
             'title' => 'New Title',
             'content' => 'New Content Lets Go'
         ];
 
-        $this->post('/posts',$params)
+        $this->actingAs($this->user())
+            ->post('/posts',$params)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -76,7 +79,8 @@ class PostTest extends TestCase
             'content' => 'x'
         ];
 
-        $this->post('/posts',$params)
+        $this->actingAs($this->user())
+            ->post('/posts',$params)
             ->assertStatus(302)
             ->assertSessionHas('errors');
 
@@ -104,7 +108,8 @@ class PostTest extends TestCase
             'content' => 'Content of the blog post 3'
         ];
 
-        $this->put("/posts/{$post->id}", $params)
+        $this->actingAs($this->user())
+            ->put("/posts/{$post->id}", $params)
             ->assertStatus(302)
             ->assertSessionHas('status');
 
@@ -122,7 +127,8 @@ class PostTest extends TestCase
             'title' => 'New Title'
         ]);
 
-        $this->delete("/posts/{$post->id}")
+        $this->actingAs($this->user())
+            ->delete("/posts/{$post->id}")
             ->assertStatus(302)
             ->assertSessionHas('status');
 
