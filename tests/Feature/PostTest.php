@@ -123,7 +123,8 @@ class PostTest extends TestCase
     public function testDelete()
     {
         $post = $this->createDummyBlogPost();
-        $this->assertDatabaseHas('blog_posts', [
+        $this->assertDatabaseHas('blog_posts', 
+        [
             'title' => 'New Title'
         ]);
 
@@ -133,9 +134,12 @@ class PostTest extends TestCase
             ->assertSessionHas('status');
 
         $this->assertEquals(session('status'), 'BlogPost was deleted');
-        $this->assertDatabaseMissing('blog_posts', [
-            'title' => 'New Title'
-        ]);
+        // $this->assertDatabaseMissing('blog_posts', [
+        //     'title' => 'New Title'
+        // ]);
+        $this->assertSoftDeleted('blog_posts', [
+                'title' => 'New Title'
+            ]);
     }
 
     private function createDummyBlogPost()
