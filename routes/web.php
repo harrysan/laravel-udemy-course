@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +24,14 @@ use Illuminate\Support\Facades\Route;
 //     return view('home.contact');
 // })->name('home.contact');
 
-Route::get('/', [HomeController::class,'home'])
-    ->name('home.index');
+Route::get('/', [HomeController::class,'home'])->name('home');
     //->middleware('auth');
-Route::get('/contact', [HomeController::class,'contact'])
-    ->name('home.contact');
+
+Route::get('/contact', [HomeController::class,'contact'])->name('contact');
+
+Route::get('secret', [HomeController::class, 'secret'])
+        ->name('secret')
+        ->middleware('can:home.secret'); //using laravel authorization system
 
 // Route::get('/posts/{$id}', function($id) {
 //     return view('posts.partial.post', ['posts' => BlogPost::findOrFail($id)]);
@@ -37,4 +41,3 @@ Route::resource('posts', PostsController::class);
 // only, except
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

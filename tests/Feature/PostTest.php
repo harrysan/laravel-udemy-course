@@ -97,7 +97,8 @@ class PostTest extends TestCase
         // $post->title = 'New Title 2';
         // $post->content = 'Content of the blog post 2';
         // $post->save();
-        $post = $this->createDummyBlogPost();
+        $user = $this->user();
+        $post = $this->createDummyBlogPost($user->id);
 
         $this->assertDatabaseHas('blog_posts', [
             'title' => 'New Title'
@@ -108,7 +109,8 @@ class PostTest extends TestCase
             'content' => 'Content of the blog post 3'
         ];
 
-        $this->actingAs($this->user())
+        $this->actingAs($user)
+        //($this->user())
             ->put("/posts/{$post->id}", $params)
             ->assertStatus(302)
             ->assertSessionHas('status');
@@ -122,13 +124,16 @@ class PostTest extends TestCase
 
     public function testDelete()
     {
-        $post = $this->createDummyBlogPost();
+        $user = $this->user();
+        $post = $this->createDummyBlogPost($user->id);
+
         $this->assertDatabaseHas('blog_posts', 
         [
             'title' => 'New Title'
         ]);
 
-        $this->actingAs($this->user())
+        $this->actingAs($user)
+        //($this->user())
             ->delete("/posts/{$post->id}")
             ->assertStatus(302)
             ->assertSessionHas('status');
@@ -142,14 +147,18 @@ class PostTest extends TestCase
             ]);
     }
 
-    private function createDummyBlogPost()
+    private function createDummyBlogPost($userId = null)
     {
         // $post = new BlogPost();
         // $post->title = 'New Title';
         // $post->content = 'Content of the blog post';
         // $post->save();
 
-        return BlogPost::factory()->new_title()->create();
+        return BlogPost::factory()->new_title()->create((
+            [
+                'user_id' => $userId ?? $this->user()->id,
+            ]
+        ));
 
         // return $post;
     }

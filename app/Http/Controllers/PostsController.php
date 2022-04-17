@@ -5,7 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 // use Illuminate\Support\Facades\DB;
+
+// Controller Method	Policy Method
+// index    => viewAny
+// show     => view
+// create	=> create
+// store	=> create
+// edit     => update
+// update   => update
+// destroy  => delete
 
 class PostsController extends Controller
 {
@@ -50,6 +60,7 @@ class PostsController extends Controller
     public function create()
     {
         //
+        // $this->authorize('posts.create');
         return view('posts.create');
     }
 
@@ -97,6 +108,17 @@ class PostsController extends Controller
     public function edit($id)
     {
         //
+        $post = BlogPost::findOrFail($id);
+
+        // if(Gate::denies('update-post', $post)) {
+        //     abort(403, "You can't edit this blog post!");
+        // }
+        // $this->authorize('update-post', ['post' => $post]);
+        //dd($post->user_id);
+
+        // $this->authorize('update', $post);
+        $this->authorize($post);
+
         return view('posts.edit',['post' => BlogPost::findOrFail($id)]);
     }
 
@@ -111,6 +133,14 @@ class PostsController extends Controller
     {
         //
         $post = BlogPost::findOrFail($id);
+
+        // if(Gate::denies('update-post', $post)) {
+        //     abort(403, "You can't edit this blog post!");
+        // }
+        // $this->authorize('update-post', ['post' => $post]);
+        // $this->authorize('posts.update', ['post' => $post]);
+        $this->authorize('update', $post);
+
         $validated = $request->validated();
         $post->fill($validated);
         $post->save();
@@ -131,6 +161,14 @@ class PostsController extends Controller
         //
         // dd($id);
         $post = BlogPost::findOrFail($id);
+
+        // if(Gate::denies('delete-post', $post)) {
+        //     abort(403, "You can't delete this blog post!");
+        // }
+        // $this->authorize('update-post', ['post' => $post]);
+        // $this->authorize('posts.delete', ['post' => $post]);
+        $this->authorize('delete', $post);
+
         $post->delete();
 
         session()->flash('status','BlogPost was deleted');
