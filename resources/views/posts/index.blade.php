@@ -1,10 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="row">
+    <div class="col-8">
     @forelse ($posts as $post)
         <p>
             <h3>
-                <a style="text-decoration:none" href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
+                @if ($post->trashed())
+                    <del>
+                @endif
+                <a 
+                class="{{ $post->trashed() ? 'text-muted' : '' }}" 
+                style="text-decoration:none" href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
+                @if ($post->trashed())
+                    </del>
+                @endif
             </h3>
 
             <p class="text-muted">
@@ -28,17 +38,80 @@
                     <p>You can't delete this post</p>
                 @endcannot --}}
 
-                @can('delete', $post)
-                    <form class="d-inline" action="{{ route('posts.destroy',['post' => $post->id]) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <input type="submit" value="Delete" class="btn btn-primary">
-                    </form>
-                @endcan
+                @if (!$post->trashed())
+                    @can('delete', $post)
+                        <form class="d-inline" action="{{ route('posts.destroy',['post' => $post->id]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <input type="submit" value="Delete" class="btn btn-primary">
+                        </form>
+                    @endcan
+                @endif
                 
             </div>
         </p>
     @empty
         <p>No blog posts yet!</p>
     @endforelse
+    </div>
+    <div class="col-4">
+        <div class="container">
+            <div class="row">
+                <div class="card" style="width: 100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Most Commented</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            What people are currently talking about
+                        </h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach ($mostCommented as $post)
+                            <li class="list-group-item">
+                                <a style="text-decoration:none" href="{{ route('posts.show', ['post' => $post->id]) }}">
+                                    {{ $post->title }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="card" style="width: 100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Most Active Users</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            Users with most posts written
+                        </h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach ($mostActive as $user)
+                            <li class="list-group-item">
+                                {{ $user->name }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="card" style="width: 100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Most Active Users Last Month</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            Users with most posts written in the month
+                        </h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach ($mostActiveLastMonth as $user)
+                            <li class="list-group-item">
+                                {{ $user->name }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection('content')
