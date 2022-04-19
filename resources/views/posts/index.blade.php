@@ -17,10 +17,13 @@
                 @endif
             </h3>
 
-            <p class="text-muted">
+            {{-- <p class="text-muted">
                 Added {{ $post->created_at->diffForHumans() }}
                 by {{ $post->user->name }}
-            </p>
+            </p> --}}
+
+            @updated(['date' => $post->created_at, 'name' => $post->user->name])
+            @endupdated
 
             @if($post->comments_count)
                 <p>{{ $post->comments_count }} comments</p>
@@ -57,7 +60,7 @@
     <div class="col-4">
         <div class="container">
             <div class="row">
-                <div class="card" style="width: 100%">
+                {{-- <div class="card" style="width: 100%">
                     <div class="card-body">
                         <h5 class="card-title">Most Commented</h5>
                         <h6 class="card-subtitle mb-2 text-muted">
@@ -73,11 +76,26 @@
                             </li>
                         @endforeach
                     </ul>
-                </div>
+                </div> --}}
+
+                @card(['title' => 'Most Commented'])
+                    @slot('subtitle')
+                        What people are currently talking about
+                    @endslot
+                    @slot('items')
+                        @foreach ($mostCommented as $post)
+                            <li class="list-group-item">
+                                <a style="text-decoration:none" href="{{ route('posts.show', ['post' => $post->id]) }}">
+                                    {{ $post->title }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @endslot
+                @endcard()
             </div>
 
             <div class="row mt-4">
-                <div class="card" style="width: 100%">
+                {{-- <div class="card" style="width: 100%">
                     <div class="card-body">
                         <h5 class="card-title">Most Active Users</h5>
                         <h6 class="card-subtitle mb-2 text-muted">
@@ -91,11 +109,19 @@
                             </li>
                         @endforeach
                     </ul>
-                </div>
+                </div> --}}
+
+                @card(['title' => 'Most Active Users'])
+                    @slot('subtitle')
+                        Users with most posts written
+                    @endslot
+
+                    @slot('items', collect($mostActive)->pluck('name'))
+                @endcard()
             </div>
 
             <div class="row mt-4">
-                <div class="card" style="width: 100%">
+                {{-- <div class="card" style="width: 100%">
                     <div class="card-body">
                         <h5 class="card-title">Most Active Users Last Month</h5>
                         <h6 class="card-subtitle mb-2 text-muted">
@@ -109,7 +135,15 @@
                             </li>
                         @endforeach
                     </ul>
-                </div>
+                </div> --}}
+
+                @card(['title' => 'Most Active Users Last Month'])
+                    @slot('subtitle')
+                    Users with most posts written in the month
+                    @endslot
+
+                    @slot('items', collect($mostActiveLastMonth)->pluck('name'))
+                @endcard()
             </div>
         </div>
     </div>
