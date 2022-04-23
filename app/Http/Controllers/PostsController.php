@@ -51,25 +51,11 @@ class PostsController extends Controller
         // return view('posts.index', ['posts' => BlogPost::all()]);
         // comments_count
 
-        $mostCommented = Cache::tags(['blog-post'])->remember('mostCommented', now()->addSecond(60),
-                            function () {
-                                return BlogPost::mostCommented()->take(5)->get();
-                            });
-        $mostActive = Cache::remember('mostActive', now()->addSecond(60),
-                            function () {
-                                return User::withMostBlogPosts()->take(5)->get();
-                            });
-
-        $mostActiveLastMonth = Cache::remember('mostActiveLastMonth', now()->addSecond(60),
-                            function () {
-                                return User::withMostBlogPostsLastMonth()->take(5)->get();
-                            });
-
         return view('posts.index', 
-                    ['posts' => BlogPost::latest()->withCount('comments')->with('user')->get(),
-                    'mostCommented' => $mostCommented,
-                    'mostActive' => $mostActive,
-                    'mostActiveLastMonth' => $mostActiveLastMonth]);
+                    ['posts' => BlogPost::latest()->withCount('comments')
+                                                ->with('user')
+                                                ->with('tags')
+                                                ->get()]);
     }
 
     /**
@@ -132,7 +118,10 @@ class PostsController extends Controller
 
         // Redis using tags
         $blogPost = Cache::tags(['blog-post'])->remember("blog-post-{$id}", 60, function () use ($id) {
-            return BlogPost::with('comments')->findOrFail($id);
+            return BlogPost::with('comments')
+                                ->with('tags')
+                                ->with('user')
+                                ->findOrFail($id);
         });
 
         $sessionId = session()->getId();

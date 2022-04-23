@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\PostTagController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,5 +40,7 @@ Route::get('secret', [HomeController::class, 'secret'])
 Route::resource('posts', PostsController::class);
     // ->only(['index','show','create','store', 'edit', 'update']);
 // only, except
+Route::get('/posts/tag/{tag}', [PostTagController::class, 'index'])->name('posts.tags.index');
+
 Auth::routes();
 
