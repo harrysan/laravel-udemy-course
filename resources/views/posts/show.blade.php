@@ -5,7 +5,18 @@
 @section('content')
 <div class="row">
     <div class="col-8">
-        <h1>
+        @if ($post->image)
+            <div style="background-image: url('{{ $post->image->url($post->image->path) }}');
+                        min-height: 500px; 
+                        color:white; 
+                        text-align:center; 
+                        background-attachment:fixed;">
+                <h1 style="padding-top: 100px;
+                            text-shadow: 1px 2px #000">                  
+        @else
+            <h1>
+        @endif
+        {{-- <h1> --}}
             {{ $post->title }}
             
             {{-- @component('components.badge', ['type' => 'primary']) --}}
@@ -13,8 +24,18 @@
                 Brand new Post!
             @endbadge
             {{-- @endcomponent --}}
-        </h1>
+        @if ($post->image)
+            </>
+            </div>
+        @else
+            </h1>
+        @endif
+        
         <p>{{ $post->content }}</p>
+
+        {{-- <img src="http://127.0.0.1:8000/storage/{{ $post->image->path }}" alt=""> --}}
+        {{-- <img src="{{ Storage::url($post->image->path) }}" alt=""> --}}
+        {{-- <img src="{{ $post->image->url($post->image->path) }}" alt=""> --}}
 
         {{-- <p>Added {{ $post->created_at->diffForHumans() }}</p> --}}
         @updated(['date' => $post->created_at, 'name' => $post->user->name])
