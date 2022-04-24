@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::aliasComponent('components.updated', 'updated');
         Blade::aliasComponent('components.card', 'card');
         Blade::aliasComponent('components.tags', 'tags');
+        Blade::aliasComponent('components.errors', 'errors');
 
         //view()->composer('*', ActivityComposer::class); //on every single view
         view()->composer(['posts.index', 'posts.show'], ActivityComposer::class);
