@@ -101,7 +101,7 @@ class PostsController extends Controller
 
             $path = $request->file('thumbnail')->store('thumbnails');
             $blogPost->image()->save(
-                Image::create(['path' => $path])
+                Image::make(['path' => $path])
             );
         }
         //die;
@@ -238,7 +238,9 @@ class PostsController extends Controller
             }
             else {
                 $post->image()->save(
-                    Image::create(['path' => $path])
+                    // $image = new Image();
+                    // $image->imageable_id = $post->id;
+                    Image::make(['path' => $path])
                 );
             }
         }
