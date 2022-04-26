@@ -18,7 +18,7 @@ class BlogPost extends Model
 
     public function comments() 
     {
-        return $this->hasMany('App\Models\Comment')->latestcomment();
+        return $this->morphMany('App\Models\Comment', 'commentable')->latestcomment();
     }
 
     public function user()
