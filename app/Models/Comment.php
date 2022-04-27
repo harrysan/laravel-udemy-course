@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Scopes\LatestScope;
+use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, Taggable;
     use SoftDeletes;
 
     protected $fillable = ['user_id', 'content'];
@@ -28,6 +29,11 @@ class Comment extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    // public function tags()
+    // {
+    //     return $this->morphToMany('App\Models\Tag', 'taggable')->withTimestamps();
+    // }
 
     public function scopeLatestComment(Builder $query)
     {

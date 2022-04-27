@@ -2,6 +2,9 @@
     <p>
         {{ $comment->content }}
     </p>
+    
+    @tags(['tags' => $comment->tags])
+    @endtags
             
     {{-- <p class="text-muted">added {{ $comment->created_at->diffForHumans() }}</p> --}}
     @updated(['date' => $comment->created_at, 
