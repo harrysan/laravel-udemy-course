@@ -15,6 +15,7 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                    <h1>{{ __('messeges.welcome') }}</h1>
                 </div>
             </div>
         </div>

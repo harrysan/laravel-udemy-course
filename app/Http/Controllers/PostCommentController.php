@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentPosted as EventsCommentPosted;
 use App\Http\Requests\StoreComment;
-use App\Jobs\NotifyUsersPostWasCommented;
-use App\Jobs\ThrottledMail;
-use App\Mail\CommentPosted;
-use App\Mail\CommentPostedMarkdown;
 use App\Models\BlogPost;
-use App\Models\Comment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class PostCommentController extends Controller
 {
@@ -43,12 +37,15 @@ class PostCommentController extends Controller
         //     new CommentPostedMarkdown($comment)
         // );
 
-        // using queue connection redis
-        ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user)
-                        ->onQueue('low');
+        // event
+        event(new EventsCommentPosted($comment));
 
-        NotifyUsersPostWasCommented::dispatch($comment)
-                                    ->onQueue('high');
+        // using queue connection redis -> move to listener
+        // ThrottledMail::dispatch(new CommentPostedMarkdown($comment), $post->user)
+        //                 ->onQueue('low');
+
+        // NotifyUsersPostWasCommented::dispatch($comment)
+        //                             ->onQueue('high');
 
         // $request->session()->flash('status','Comment was created');
 

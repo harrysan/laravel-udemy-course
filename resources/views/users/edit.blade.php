@@ -21,14 +21,25 @@
             </div>
             <div class="col-8">
                 <div class="form-group">
-                    <label>Name:</label>
+                    <label>{{ __('Name:') }}</label>
                     <input class="form-control" value="" type="text" name="name" />
+                </div>
+
+                <div class="form-group">
+                    <label>{{ __('Language:') }}</label>
+                    <select class="form-control" name="locale" id="">
+                        @foreach (App\Models\User::LOCALES as $locale => $label)
+                            <option value="{{ $locale }}" {{ $user->locale !== $locale ?: 'selected' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 @errors @enderrors
 
                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Save Changes" />
+                    <input type="submit" class="btn btn-primary mt-3" value="Save Changes" />
                 </div>
             </div>
         </div>
