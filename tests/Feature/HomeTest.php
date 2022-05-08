@@ -16,7 +16,7 @@ class HomeTest extends TestCase
     public function testHomePageIsWorkingCorrectly()
     {
         $response = $this->get('/');
-        $response->assertSeeText('index page');
+        $response->assertSeeText('Using JSON');
 
         // $response->assertStatus(200);
     }
